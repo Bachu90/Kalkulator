@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Kalkulator</title>
+    <style>
+        /* wykorzystaj body do wycentrowania kalkulatora za pomocą flexboxa */
+
+        /* nie można zmieniać struktury html */
+
+        /* kalkulator ma 60% szerokości body ale nie mniej niz 500px */
+
+        /* wyświetlacz wyniku ma 15vh wysokości */
+
+        /* przyciski mają 10vh wysokości */
+
+        /* Panel bez wyświetlacza ma mieć wysokość 70vh (czyli z wyświetlaczem 85vh)*/
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .panel {
+            display: flex;
+            flex-wrap: wrap;
+            min-width: 500px;
+            flex-basis: 60%;
+            height: 85vh;
+            /* background-color: #fff; */
+            justify-content: space-between;
+            align-content: space-between;
+            font-family: arial;
+            font-size: 50px;
+            color: #fff;
+        }
+
+        .result~div {
+            flex-basis: 30%;
+            height: 10vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: cadetblue;
+        }
+
+
+        .result~div:hover {
+            cursor: pointer;
+            background-color: royalblue;
+        }
+
+        .result {
+            display: flex;
+            flex-basis: 100%;
+            height: 15vh;
+            background-color: #000;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 50px;
+        }
+
+        .panel div:nth-child(17),
+        .panel div:nth-child(18) {
+            flex-basis: 45%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel">
+        <div class="result">0</div>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        <div>+</div>
+        <div>0</div>
+        <div>-</div>
+        <div>/</div>
+        <div>.</div>
+        <div>*</div>
+        <div>C</div>
+        <div>=</div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        /* Wyświetlacz */
+        var screen = document.querySelector('.result');
+        /* Przyciśnięty klawisz */
+        var key = document.querySelectorAll('.result~div');
+        /* Wynik działania */
+        var result = "0";
+
+        /* Liczby działania */
+        var n1 = 0;
+        var n2 = 0;
+
+        /* Znak działania */
+        var sign = "=";
+
+        /* Funkcja dodowania */
+        function addition(val1, val2) {
+            return val1 + val2;
+        }
+        /* Funkcja odejmowania */
+        function substraction(val1, val2) {
+            return val1 - val2;
+        }
+
+        /* Funkcja mnożenia */
+        function multiply(val1, val2) {
+            return val1 * val2;
+        }
+
+        /* Funkcja dzielenia */
+        function divide(val1, val2) {
+            return val1 / val2;
+        }
+
+
+        /* Skrypt */
+
+        function mouseCount() {
+            if (this.innerHTML == "+" || this.innerHTML == "-" || this.innerHTML == "*" || this.innerHTML ==
+                "/" || this.innerHTML == "=") {
+                if (sign == "" || sign == "=") {
+                    n1 = parseFloat(result);
+                    result = "";
+                    sign = this.innerHTML;
+                } else {
+                    n2 = parseFloat(result)
+                    result = "";
+
+                    switch (sign) {
+                        case "+":
+                            result = addition(n1, n2);
+                            break;
+                        case "-":
+                            result = substraction(n1, n2);
+                            break;
+                        case "*":
+                            result = multiply(n1, n2);
+                            break;
+                        case "/":
+                            result = divide(n1, n2);
+                            break;
+                    }
+                    screen.innerHTML = result;
+                    sign = this.innerHTML;
+                }
+
+            } else if (this.innerHTML == "C") {
+                n1 = 0;
+                n2 = 0;
+                sign = "";
+                result = "0";
+                screen.innerHTML = result;
+
+            } else {
+                if (sign == "=") {
+                    result = this.innerHTML;
+                    screen.innerHTML = result;
+                    sign = "";
+                } else {
+                    result += this.innerHTML;
+                    screen.innerHTML = result;
+                }
+
+            }
+        };
+
+
+        function keyboardCount(e) {
+            if (e.keyCode == 43 || e.keyCode == 45 || e.keyCode == 47 || e.keyCode == 42 || e.keyCode == 13) {
+                if (sign == "" || sign == "=") {
+                    n1 = parseFloat(result);
+                    result = "";
+                    switch (e.keyCode) {
+                        case 43:
+                            sign = "+";
+                            break;
+                        case 45:
+                            sign = "-";
+                            break;
+                        case 47:
+                            sign = "/";
+                            break;
+                        case 42:
+                            sign = "*";
+                            break;
+                        case 13:
+                            sign = "=";
+                            break;
+                    }
+                } else {
+                    n2 = parseFloat(result)
+                    result = "";
+
+                    switch (sign) {
+                        case "+":
+                            result = addition(n1, n2);
+                            break;
+                        case "-":
+                            result = substraction(n1, n2);
+                            break;
+                        case "*":
+                            result = multiply(n1, n2);
+                            break;
+                        case "/":
+                            result = divide(n1, n2);
+                            break;
+                    }
+                    screen.innerHTML = result;
+                    switch (e.keyCode) {
+                        case 43:
+                            sign = "+";
+                            break;
+                        case 45:
+                            sign = "-";
+                            break;
+                        case 47:
+                            sign = "/";
+                            break;
+                        case 42:
+                            sign = "*";
+                            break;
+                        case 13:
+                            sign = "=";
+                            break;
+                    }
+                }
+
+            } else if (e.keyCode > 47 && e.keyCode < 58) {
+                if (sign == "=") {
+                    switch (e.keyCode) {
+                        case 48:
+                            result = "0";
+                            break;
+                        case 49:
+                            result = "1";
+                            break;
+                        case 50:
+                            result = "2";
+                            break;
+                        case 51:
+                            result = "3";
+                            break;
+                        case 52:
+                            result = "4";
+                            break;
+                        case 53:
+                            result = "5";
+                            break;
+                        case 54:
+                            result = "6";
+                            break;
+                        case 55:
+                            result = "7";
+                            break;
+                        case 56:
+                            result = "8";
+                            break;
+                        case 57:
+                            result = "9";
+                            break;
+                    }
+                    screen.innerHTML = result;
+                    sign = "";
+                } else {
+                    switch (e.keyCode) {
+                        case 48:
+                            result += "0";
+                            break;
+                        case 49:
+                            result += "1";
+                            break;
+                        case 50:
+                            result += "2";
+                            break;
+                        case 51:
+                            result += "3";
+                            break;
+                        case 52:
+                            result += "4";
+                            break;
+                        case 53:
+                            result += "5";
+                            break;
+                        case 54:
+                            result += "6";
+                            break;
+                        case 55:
+                            result += "7";
+                            break;
+                        case 56:
+                            result += "8";
+                            break;
+                        case 57:
+                            result += "9";
+                            break;
+                    }
+                    screen.innerHTML = result;
+                }
+
+            }
+
+        };
+
+        for (var i = 0; i < key.length; i++) {
+            key[i].addEventListener('click', mouseCount);
+        }
+
+        window.addEventListener('keypress', keyboardCount);
+    </script>
+</body>
+
+</html>
